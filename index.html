@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hospital Submission Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --primary: #2a9df4;
+      --accent: #6dd5fa;
+      --bg: #f4f9ff;
+      --card: #ffffff;
+      --text: #1f2d3d;
+      --muted: #6b7280;
+      --success: #16a34a;
+      --danger: #dc2626;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      color: var(--text);
+    }
+    .container {
+      width: min(900px, 92vw);
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+      overflow: hidden;
+      animation: pop .5s ease;
+    }
+    header {
+      padding: 22px 26px;
+      background: #0e4c92;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header .logo {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: linear-gradient(135deg, #6dd5fa, #2a9df4);
+    }
+    header h1 { font-size: 1.25rem; margin: 0; }
+    main { padding: 22px; background: var(--bg); }
+    .grid { display: grid; gap: 16px; }
+    @media (min-width: 720px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      border: 1px solid #e5e7eb;
+    }
+    .card h2 {
+      margin: 0 0 6px; font-size: 1.05rem; color: #0f172a;
+    }
+    label { display: block; font-weight: 600; margin-top: 12px; }
+    .hint { color: var(--muted); font-size: .9rem; margin-top: 2px; }
+    input, select, textarea {
+      width: 100%; margin-top: 6px; padding: 12px 12px;
+      border: 1px solid #d1d5db; border-radius: 10px; outline: none;
+      background: #fff; transition: box-shadow .2s, border-color .2s;
+      font-size: 1rem;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(42,157,244,.15);
+    }
+    .actions {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px;
+    }
+    button {
+      border: 0; border-radius: 10px; padding: 12px 16px; font-weight: 700;
+      cursor: pointer; transition: transform .05s ease, opacity .2s;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-ghost   { background: #e5f2fe; color: #0b5cab; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger  { background: var(--danger); color: white; }
+    button:active { transform: translateY(1px); }
+    .review {
+      display: none; margin-top: 8px; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 14px;
+      background: #f8fbff;
+    }
+    .row { display: grid; grid-template-columns: 180px 1fr; padding: 8px 0; border-bottom: 1px dashed #e5e7eb; }
+    .row:last-child { border-bottom: 0; }
+    .row b { color: #0f172a; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { padding: 6px 10px; border-radius: 999px; background: #eef6ff; border: 1px solid #cfe4ff; }
+    .toast {
+      position: fixed; inset-inline: 0; bottom: 14px; display: grid; place-items: center; pointer-events: none;
+    }
+    .toast .msg {
+      background: #062b52; color: white; padding: 12px 16px; border-radius: 10px; box-shadow: 0 10px 24px rgba(0,0,0,.35);
+      pointer-events: all;
+    }
+    @keyframes pop { from{ transform: scale(.98); opacity: 0 } to{ transform: scale(1); opacity: 1 } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo"></div>
+      <div>
+        <h1>Hospital Submission Form</h1>
+        <div class="hint">Uploads photos, videos, and documents — Google Sheets + Drive integrated.</div>
+      </div>
+    </header>
+
+    <main>
+      <form id="hospitalForm" class="grid grid-2">
+        <div class="card">
+          <h2>Patient Details</h2>
+          <label>Patient Name
+            <input type="text" name="name" placeholder="Enter full name" required />
+          </label>
+          <label>Age
+            <input type="number" name="age" min="0" placeholder="Enter age" required />
+          </label>
+          <label>Gender
+            <select name="gender" required>
+              <option value="">-- Select Gender --</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>Additional Notes
+            <textarea name="notes" rows="4" placeholder="Enter any extra details..."></textarea>
+          </label>
+        </div>
+
+        <div class="card">
+          <h2>Treatment Files</h2>
+          <label>Upload Treatment Photos
+            <input type="file" name="photos[]" accept="image/*" multiple />
+            <div class="hint">PNG, JPG, etc. You can select multiple.</div>
+          </label>
+          <label>Upload Treatment Videos
+            <input type="file" name="videos[]" accept="video/*" multiple />
+            <div class="hint">MP4, MOV, etc.</div>
+          </label>
+          <label>Upload Text Reports
+            <input type="file" name="documents[]" accept=".txt,.pdf,.doc,.docx" multiple />
+            <div class="hint">TXT, PDF, DOC, DOCX</div>
+          </label>
+
+          <div class="actions">
+            <button type="button" class="btn-ghost" id="btnPreview">Review &amp; Confirm</button>
+            <button type="submit" class="btn-primary">Submit</button>
+            <button type="reset" class="btn-danger">Clear</button>
+          </div>
+        </div>
+
+        <div class="card grid" style="grid-column: 1 / -1">
+          <h2>Review</h2>
+          <div id="reviewBox" class="review">
+            <div class="row"><b>Patient Name</b> <span id="rvName">—</span></div>
+            <div class="row"><b>Age</b> <span id="rvAge">—</span></div>
+            <div class="row"><b>Gender</b> <span id="rvGender">—</span></div>
+            <div class="row"><b>Notes</b> <span id="rvNotes">—</span></div>
+            <div class="row"><b>Photos</b> <span id="rvPhotos" class="chips"></span></div>
+            <div class="row"><b>Videos</b> <span id="rvVideos" class="chips"></span></div>
+            <div class="row"><b>Documents</b> <span id="rvDocs" class="chips"></span></div>
+            <div class="actions">
+              <button type="button" class="btn-ghost" id="btnEdit">Edit</button>
+              <button type="button" class="btn-success" id="btnConfirm">Confirm &amp; Submit</button>
+            </div>
+          </div>
+          <div class="hint">Tip: Use “Review &amp; Confirm” to double-check before final submission.</div>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" style="display:none;">
+    <div class="msg" id="toastMsg">Saved</div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = 'YOUR_WEB_APP_URL_HERE'; // <-- paste your Apps Script Web App URL
+
+    const form = document.getElementById('hospitalForm');
+    const reviewBox = document.getElementById('reviewBox');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+
+    const btnPreview = document.getElementById('btnPreview');
+    const btnEdit = document.getElementById('btnEdit');
+    const btnConfirm = document.getElementById('btnConfirm');
+
+    const rvName   = document.getElementById('rvName');
+    const rvAge    = document.getElementById('rvAge');
+    const rvGender = document.getElementById('rvGender');
+    const rvNotes  = document.getElementById('rvNotes');
+    const rvPhotos = document.getElementById('rvPhotos');
+    const rvVideos = document.getElementById('rvVideos');
+    const rvDocs   = document.getElementById('rvDocs');
+
+    function showToast(message) {
+      toastMsg.textContent = message;
+      toast.style.display = 'grid';
+      setTimeout(() => { toast.style.display = 'none'; }, 2600);
+    }
+
+    function chip(name) {
+      const span = document.createElement('span');
+      span.className = 'chip';
+      span.textContent = name;
+      return span;
+    }
+
+    function fileNames(list) {
+      const arr = [];
+      for (const f of list) arr.push(f.name);
+      return arr;
+    }
+
+    function populateReview() {
+      const fd = new FormData(form);
+      rvName.textContent   = fd.get('name') || '—';
+      rvAge.textContent    = fd.get('age') || '—';
+      rvGender.textContent = fd.get('gender') || '—';
+      rvNotes.textContent  = fd.get('notes') || '—';
+
+      rvPhotos.innerHTML = '';
+      rvVideos.innerHTML = '';
+      rvDocs.innerHTML   = '';
+
+      const photos = form.querySelector('input[name="photos[]"]').files;
+      const videos = form.querySelector('input[name="videos[]"]').files;
+      const docs   = form.querySelector('input[name="documents[]"]').files;
+
+      fileNames(photos).forEach(n => rvPhotos.appendChild(chip(n)));
+      fileNames(videos).forEach(n => rvVideos.appendChild(chip(n)));
+      fileNames(docs).forEach(n => rvDocs.appendChild(chip(n)));
+    }
+
+    btnPreview.addEventListener('click', () => {
+      populateReview();
+      reviewBox.style.display = 'block';
+      showToast('Review your details before submitting');
+    });
+
+    btnEdit.addEventListener('click', () => {
+      reviewBox.style.display = 'none';
+      showToast('Editing enabled');
+    });
+
+    btnConfirm.addEventListener('click', async () => {
+      await submitToAppsScript();
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await submitToAppsScript();
+    });
+
+    async function submitToAppsScript() {
+      const fd = new FormData(form);
+
+      // IMPORTANT: Also append “flat” keys for GAS helper to catch (photos, videos, documents)
+      // This ensures compatibility with different e.files key shapes.
+      const photos = form.querySelector('input[name="photos[]"]').files;
+      const videos = form.querySelector('input[name="videos[]"]').files;
+      const docs   = form.querySelector('input[name="documents[]"]').files;
+
+      // Add files again with simplified keys (photos, videos, documents)
+      for (const f of photos) fd.append('photos', f, f.name);
+      for (const f of videos) fd.append('videos', f, f.name);
+      for (const f of docs)   fd.append('documents', f, f.name);
+
+      try {
+        const res = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          body: fd,
+        });
+
+        // Try reading JSON; if CORS blocks reading, still show success UI
+        let ok = res.ok, msg = 'Submitted';
+        try {
+          const data = await res.json();
+          ok = data.ok;
+          msg = data.message || msg;
+        } catch (_) {}
+
+        if (ok) {
+          showToast('✅ Submission saved');
+          form.reset();
+          reviewBox.style.display = 'none';
+        } else {
+          showToast('⚠️ Could not save. Check script config.');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('❌ Network or permission error');
+      }
+    }
+  </script>
+</body>
+</html>
